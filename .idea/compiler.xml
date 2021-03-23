@@ -2,15 +2,28 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
-      <profile name="Maven default annotation processors profile" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Annotation profile for recipes" enabled="true">
+        <sourceOutputDir name="target/main/generated" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <option name="codegen.output" value="$PROJECT_DIR$/src/main" />
+        <processor name="io.vertx.codegen.CodeGenProcessor" />
         <module name="recipes" />
+      </profile>
+      <profile name="Annotation profile for vertx-libs-microservice" enabled="true">
+        <sourceOutputDir name="src/main/generated" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <option name="codegen.output" value="$PROJECT_DIR$/../curso-vertx-libs-master/microservice-lib-common/src/main" />
+        <processor name="io.vertx.codegen.CodeGenProcessor" />
+        <module name="microservice-lib-common" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="recipes" target="11" />
+      <module name="microservice-lib-common" target="1.8" />
+      <module name="recipes" target="1.8" />
+      <module name="vertx-libs-microservice" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
