@@ -1,0 +1,16 @@
+= Cheatsheets
+
+[[RecipeDTO]]
+== RecipeDTO
+
+
+[cols=">25%,25%,50%"]
+[frame="topbot"]
+|===
+^|Name | Type ^| Description
+|[[author]]`@author`|`String`|-
+|[[id]]`@id`|`String`|-
+|[[recipe]]`@recipe`|`String`|-
+|[[title]]`@title`|`String`|-
+|===
+
