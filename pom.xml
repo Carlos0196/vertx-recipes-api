@@ -57,11 +57,6 @@
             <groupId>io.vertx</groupId>
             <artifactId>vertx-web-api-contract</artifactId>
         </dependency>
-        <dependency>
-            <groupId>io.vertx.blueprint</groupId>
-            <artifactId>microservice-lib-common</artifactId>
-            <version>3.4.2-SNAPSHOT</version>
-        </dependency>
 
         <!-- DB dependencies -->
         <dependency>

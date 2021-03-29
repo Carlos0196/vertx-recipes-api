@@ -1,4 +1,4 @@
-package com.vertx.recipes.service.recipe;
+package com.vertx.recipes.service;
 
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
@@ -10,8 +10,8 @@ public final class RecipeServiceProvider {
     /* Singleton */
     private static RecipeServiceProvider instance = new RecipeServiceProvider();
 
-    public synchronized RecipeService init(Vertx vertx, JsonObject config) {
-        setRecipeService(new RecipeServiceImpl(vertx, config));
+    public synchronized RecipeService init() {
+        setRecipeService(new RecipeServiceImpl());
         return getRecipeService();
     }
 
@@ -26,8 +26,8 @@ public final class RecipeServiceProvider {
         return recipeService;
     }
 
-    private void setRecipeService(RecipeService RecipeService) {
-        this.recipeService = RecipeService;
+    private void setRecipeService(RecipeService recipeService) {
+        this.recipeService = recipeService;
     }
 
 }
