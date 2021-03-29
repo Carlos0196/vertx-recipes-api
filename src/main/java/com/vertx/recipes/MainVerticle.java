@@ -1,15 +1,19 @@
 package com.vertx.recipes;
 
-import com.vertx.recipes.service.recipe.RecipeService;
-import com.vertx.recipes.service.recipe.RecipeServiceProvider;
+import com.vertx.recipes.controller.RecipeController;
+import com.vertx.recipes.repository.RecipeRepository;
+import com.vertx.recipes.repository.RecipeRepositoryProvider;
+import com.vertx.recipes.service.RecipeServiceProvider;
 import com.vertx.recipes.verticle.RecipeHttpServerVerticle;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Future;
 import io.vertx.core.Promise;
+import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
-import io.vertx.serviceproxy.ServiceBinder;
+import io.vertx.ext.web.Router;
+import io.vertx.ext.web.handler.BodyHandler;
 
 public class MainVerticle extends AbstractVerticle {
 
@@ -21,20 +25,48 @@ public class MainVerticle extends AbstractVerticle {
 
         // Init recipe service provider
         RecipeServiceProvider recipeServiceProvider = RecipeServiceProvider.getInstance();
-        recipeServiceProvider.init(vertx, config());
+        recipeServiceProvider.init();
 
-        // Bind recipe service
-        new ServiceBinder(vertx)
-            .setAddress(RecipeService.SERVICE_ADDRESS)
-            .register(RecipeService.class, recipeServiceProvider.getRecipeService());
+        // Init recipe repository provider
+        RecipeRepositoryProvider recipeRepositoryProvider = RecipeRepositoryProvider.getInstance();
+        recipeRepositoryProvider.init(vertx, config());
 
-        // Deploy recipe verticle
-        deployVerticle()
+        // Deploy http server
+        Router router = Router.router(vertx);
+
+        // CORS
+        // enableCorsSupport(router);
+
+        // Nos permitirá parsear el body handler para obtener el payload
+        router.route().handler(BodyHandler.create());
+
+        // Heartbeat
+        router.get(config().getString("heartbeat.path", "/ping")).handler(context -> {
+            JsonObject checkResult = new JsonObject().put("status", "UP");
+            context.response().end(checkResult.encode());
+        });
+
+        router.route(RecipeController.getApiPath()).handler(new RecipeController(router));
+
+        // Server config with default data
+        String host = config().getString("vertx.host", "0.0.0.0");
+        int port = config().getInteger("vertx.port", 7777);
+
+        // Http server
+        vertx.createHttpServer().requestHandler(router).listen(port, host, res -> {
+            if (res.succeeded()) {
+                LOGGER.info(" started " + this.getClass().getSimpleName() + " on " + host + ":" + port);
+            } else {
+                LOGGER.info(" failed to start " + this.getClass().getSimpleName());
+            }
+        });
+
+        /*deployVerticle()
             .onSuccess(ar -> {
                 startPromise.complete();
                 System.out.println("HTTP server started on port 8888");
             })
-            .onFailure(ar -> startPromise.fail(ar.getCause()));
+            .onFailure(ar -> startPromise.fail(ar.getCause()));*/
     }
 
     private Future<Void> deployVerticle() {

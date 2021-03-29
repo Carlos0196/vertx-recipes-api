@@ -11,14 +11,6 @@
         <processor name="io.vertx.codegen.CodeGenProcessor" />
         <module name="recipes" />
       </profile>
-      <profile name="Annotation profile for vertx-libs-microservice" enabled="true">
-        <sourceOutputDir name="src/main/generated" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <option name="codegen.output" value="$PROJECT_DIR$/../curso-vertx-libs-master/microservice-lib-common/src/main" />
-        <processor name="io.vertx.codegen.CodeGenProcessor" />
-        <module name="microservice-lib-common" />
-      </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="microservice-lib-common" target="1.8" />
